@@ -63,17 +63,18 @@ class Map:
 
     @staticmethod
     def clear():
-        # todo executer "cls" ou "clear" en fonction de l'os
+        from platform import system as get_os_name
         from os import system
-        system("cls")
+        system("cls" if get_os_name() == "Windows" else "clear")
 
 
 if __name__ == '__main__':
-    # todo tester le module avec des nombres aléatoires
-    # from random import randint
+    from platform import system as get_os_name
+    from os import system
     # todo mesurer le temps d'execution
-    test = Map(15, 7)
-    test[2, 3] = "P"
+    x, y, a, b = 10, 6, 2, 3
+    test = Map(x, y)
     test.create_border()
+    test[a, b] = "P"
     print(test)
-    print(test[2, 3])
+    print(test[a, b])
