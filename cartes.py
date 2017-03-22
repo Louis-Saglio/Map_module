@@ -29,13 +29,23 @@ class Map:
         index1, index2 = key
         self.map[index1][index2] = value
 
+    def __str__(self):
+        rep = ''
+        for case in self:
+            rep += case["case"] + ''
+        return rep
+
+    def create_map(self):
+        return [[self.filling_type for h in range(self.height)] for l in range(self.width)]
+
     def print_map(self):
         print('')
         for case in self:
             print(case["case"] + ' ', end='\n' if case["is_right_border"] else '', sep='')
 
-    def create_map(self):
-        return [[self.filling_type for h in range(self.height)] for l in range(self.width)]
+    def is_border_position(self, pos):
+        h, l = pos
+        return h == self.height - 1 or h == 0 or l == self.width - 1 or l == 0
 
     def create_border(self):
         for case in self:
@@ -49,6 +59,14 @@ class Map:
         system("cls")
 
 
+class Pawn:
+
+    def __init__(self, a_map, position=(1, 1)):
+        self.x, self.y = position
+
+    def get_in_map(self):
+        pass
+
 if __name__ == '__main__':
     # todo tester le module avec des nombres aléatoires
     # from random import randint
@@ -58,3 +76,4 @@ if __name__ == '__main__':
     test.create_border()
     test.print_map()
     print(test[2, 3])
+    print(test)
