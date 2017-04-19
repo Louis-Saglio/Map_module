@@ -12,14 +12,13 @@ class Case:
     def get_border_type(self):
         l, h = self.coordinates
         return {
-            "is_top": True if h == 0 else False,
-            "is_left": True if l == 0 else False,
-            "is_bottom": True if h == self.owning_map.height - 1 else False,
-            "is_right": True if l == self.owning_map.width - 1 else False
+            "is_top": h == 0 or False,
+            "is_left": l == 0 or False,
+            "is_bottom": h == self.owning_map.height - 1 or False,
+            "is_right": l == self.owning_map.width - 1 or False
         }
 
-    def is_border_position(self, pos):
-        l, h = pos
+    def is_border_position(self):
         return len([True for value in self.border.values() if value]) != 0
 
 
@@ -58,7 +57,7 @@ class Map:
 
     def create_border(self):
         for case in self:
-            if case.is_border_position(case.coordinates):
+            if case.is_border_position():
                 self[case.coordinates] = Case(self.border_type, self, case.coordinates)
 
 
@@ -74,7 +73,6 @@ class Pawn:
         self.look = look
         self.owning_map = owning_map
         self._case = self.owning_map[self.position]
-        self.set_position(self.position)
 
     def __str__(self):
         return str(self.look)
@@ -87,38 +85,31 @@ class Pawn:
     def position(self):
         return self._position
 
-    def set_position(self, new_position):
+    @position.setter
+    def position(self, new_position):
         self._position = new_position
         self._case = self.owning_map[self.position]
         self.owning_map[self.position] = self
 
-    def move_up(self):
+    def move(self, direction):
+        directions = {"up": (0, -1), "down": (0, 1), "right": (1, 0), "left": (-1, 0)}
         self.owning_map[self.position] = self.case
-        self.set_position((self.position[0], self.position[1]-1))
-
-    def move_down(self):
-        self.owning_map[self.position] = self.case
-        self.set_position((self.position[0], self.position[1]+1))
-
-    def move_right(self):
-        self.owning_map[self.position] = self.case
-        self.set_position((self.position[0]+1, self.position[1]))
-
-    def move_left(self):
-        self.owning_map[self.position] = self.case
-        self.set_position((self.position[0]-1, self.position[1]))
+        self.position = (self.position[0]+directions[direction][0], self.position[1]+directions[direction][1])
 
 
 if __name__ == '__main__':
-    # todo mesurer le temps d'execution
+    from time import time
     x, y, a, b = 10, 6, 2, 3
+    debut = time()
     test = Map(x, y)
     test.create_border()
     test[a, b] = "P"
-    print(test[a, b])
     pawn = Pawn(test, (5, 4), "O")
-    pawn.move_up()
-    pawn.move_left()
-    pawn.move_down()
-    pawn.move_right()
+    pawn.move("up")
+    pawn.move("left")
+    pawn.move("down")
+    pawn.move("right")
+    pawn.move("right")
+    pawn.move("up")
     print(test)
+    print("Tests executés en", round(time()-debut, 3), "seconde(s) avec succès.")
