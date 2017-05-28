@@ -19,7 +19,7 @@ class Case:
         }
 
     def is_border_position(self):
-        return len([True for value in self.border.values() if value]) != 0
+        return len([None for value in self.border.values() if value]) != 0
 
 
 class Map:
